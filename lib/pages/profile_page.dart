@@ -696,6 +696,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       const SizedBox.shrink(),
                       const SizedBox(height: 8),
+                      // Header with avatar + action buttons
+                      _buildHeaderCard(currentProfile),
+                      const SizedBox(height: 8),
                       _buildAboutMeCard(currentProfile),
                       const SizedBox(height: 16),
                       _buildGenresCard(currentProfile),
