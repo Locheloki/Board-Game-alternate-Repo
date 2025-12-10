@@ -5,7 +5,8 @@ import '../services/game_service.dart';
 import '../config/app_theme.dart';
 import '../widgets/animations.dart';
 import 'ui/game_catalog_card.dart';
-import 'ui/header/profile_header.dart';
+// Add this import
+import 'ui/header/catalog_header.dart';
 
 class CatalogPage extends StatefulWidget {
   const CatalogPage({Key? key}) : super(key: key);
