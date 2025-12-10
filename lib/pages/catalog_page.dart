@@ -5,6 +5,7 @@ import '../services/game_service.dart';
 import '../config/app_theme.dart';
 import '../widgets/animations.dart';
 import 'ui/game_catalog_card.dart';
+import 'ui/header/profile_header.dart';
 
 class CatalogPage extends StatefulWidget {
   const CatalogPage({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class CatalogPage extends StatefulWidget {
 
 class _CatalogPageState extends State<CatalogPage> {
   // Stores the IDs of selected games
-  Set<String> _selectedGameIds = {}; 
+  Set<String> _selectedGameIds = {};
   late ScrollController _scrollController;
   // Cache the games list to prevent rebuilds on stream re-emission
   List<BoardGame>? _cachedGames;
@@ -41,7 +42,7 @@ class _CatalogPageState extends State<CatalogPage> {
       }
     });
   }
-  
+
   void _addSelectedGames() async {
     if (_selectedGameIds.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -49,16 +50,15 @@ class _CatalogPageState extends State<CatalogPage> {
       );
       return;
     }
-    
+
     // 1. Call service to add all selected games (Triggers counter cache update)
     await GameService.addGamesByIds(_selectedGameIds.toList());
-    
+
     if (mounted) {
       // 2. Return to the Collection Page
-      Navigator.of(context).pop(); 
+      Navigator.of(context).pop();
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class _CatalogPageState extends State<CatalogPage> {
           } else if (snapshot.hasData) {
             _cachedGames = snapshot.data;
           }
-          
+
           final games = _cachedGames ?? [];
           if (games.isEmpty) {
             return FadeInWidget(
@@ -97,7 +97,7 @@ class _CatalogPageState extends State<CatalogPage> {
               ),
             );
           }
-          
+
           return FadeInWidget(
             child: GridView.builder(
               controller: _scrollController,
@@ -113,7 +113,7 @@ class _CatalogPageState extends State<CatalogPage> {
               itemBuilder: (context, index) {
                 final game = games[index];
                 final isSelected = _selectedGameIds.contains(game.id);
-                
+
                 return SlideUpWidget(
                   duration: AppAnimation.normal,
                   initialOffset: 30.0,
