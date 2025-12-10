@@ -29,8 +29,10 @@ class _FadeInWidgetState extends State<FadeInWidget>
   void initState() {
     super.initState();
     _controller = AnimationController(duration: widget.duration, vsync: this);
-    _opacity = Tween<double>(begin: widget.initialOpacity, end: 1.0)
-        .animate(CurvedAnimation(parent: _controller, curve: widget.curve));
+    _opacity = Tween<double>(
+      begin: widget.initialOpacity,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
     _controller.forward();
   }
 
@@ -121,8 +123,10 @@ class _ScaleInWidgetState extends State<ScaleInWidget>
   void initState() {
     super.initState();
     _controller = AnimationController(duration: widget.duration, vsync: this);
-    _scale = Tween<double>(begin: widget.initialScale, end: 1.0)
-        .animate(CurvedAnimation(parent: _controller, curve: widget.curve));
+    _scale = Tween<double>(
+      begin: widget.initialScale,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
     _controller.forward();
   }
 
@@ -166,10 +170,8 @@ class _StaggeredListAnimationState extends State<StaggeredListAnimation>
     super.initState();
     _controllers = List.generate(
       widget.children.length,
-      (index) => AnimationController(
-        duration: widget.itemDuration,
-        vsync: this,
-      ),
+      (index) =>
+          AnimationController(duration: widget.itemDuration, vsync: this),
     );
 
     // Stagger the animations
@@ -191,26 +193,27 @@ class _StaggeredListAnimationState extends State<StaggeredListAnimation>
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: List.generate(
-        widget.children.length,
-        (index) {
-          final offsetAnimation = Tween<Offset>(
-            begin: const Offset(0, 0.3),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(parent: _controllers[index], curve: widget.curve));
+      children: List.generate(widget.children.length, (index) {
+        final offsetAnimation =
+            Tween<Offset>(
+              begin: const Offset(0, 0.3),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(parent: _controllers[index], curve: widget.curve),
+            );
 
-          final opacityAnimation = Tween<double>(begin: 0.0, end: 1.0)
-              .animate(CurvedAnimation(parent: _controllers[index], curve: widget.curve));
+        final opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(parent: _controllers[index], curve: widget.curve),
+        );
 
-          return SlideTransition(
-            position: offsetAnimation,
-            child: FadeTransition(
-              opacity: opacityAnimation,
-              child: widget.children[index],
-            ),
-          );
-        },
-      ),
+        return SlideTransition(
+          position: offsetAnimation,
+          child: FadeTransition(
+            opacity: opacityAnimation,
+            child: widget.children[index],
+          ),
+        );
+      }),
     );
   }
 }
@@ -249,8 +252,10 @@ class _TapScaleButtonState extends State<TapScaleButton>
       lowerBound: 0.0,
       upperBound: 1.0,
     );
-    _scale = Tween<double>(begin: 1.0, end: widget.pressedScale)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: widget.pressedScale,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -271,10 +276,7 @@ class _TapScaleButtonState extends State<TapScaleButton>
       onTapDown: _onTapDown,
       onTapUp: _onTapUp,
       onTapCancel: _onTapCancel,
-      child: ScaleTransition(
-        scale: _scale,
-        child: widget.child,
-      ),
+      child: ScaleTransition(scale: _scale, child: widget.child),
     );
   }
 }

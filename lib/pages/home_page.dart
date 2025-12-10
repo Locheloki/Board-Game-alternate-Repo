@@ -5,7 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../config/app_theme.dart';
 import '../services/game_service.dart';
 import '../services/auth_service.dart';
-import '../services/profile_service.dart'; 
+import '../services/profile_service.dart';
 import '../models/board_game.dart';
 import 'player_finder.dart';
 import 'profile_page.dart';
@@ -23,17 +23,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  late String _username; 
+  late String _username;
 
   @override
   void initState() {
     super.initState();
     _username = widget.initialUsername;
-    ProfileService.updateCurrentLocation(); 
+    ProfileService.updateCurrentLocation();
   }
-  
-  void _handleLogout() async { 
-    await AuthService.logout(); 
+
+  void _handleLogout() async {
+    await AuthService.logout();
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LoginPage()),
@@ -51,11 +51,11 @@ class _HomePageState extends State<HomePage> {
   Widget _getPage() {
     switch (_selectedIndex) {
       case 0:
-        return const DiscoverPage(); 
+        return const DiscoverPage();
       case 1:
-        return const MyCollectionPage(); 
+        return const MyCollectionPage();
       case 2:
-        return const PlayerFinderPage(); 
+        return const PlayerFinderPage();
       case 3:
         return ProfilePage(onLogout: _handleLogout);
       default:
@@ -73,19 +73,74 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.darkBg,
       appBar: _getAppBar(),
       body: _getPage(),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.darkBgSecondary,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.white54,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Discover"),
-          BottomNavigationBarItem(icon: Icon(Icons.collections), label: "Collection"),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: "Friends"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.only(bottom: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0), // keep 10-15px from screen edges
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.darkBgSecondary,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.35),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: BottomNavigationBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                selectedItemColor: AppColors.primary,
+                unselectedItemColor: Colors.white54,
+                currentIndex: _selectedIndex,
+                onTap: _onItemTapped,
+                type: BottomNavigationBarType.fixed,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: AnimatedScale(
+                      scale: _selectedIndex == 0 ? 1.12 : 1.0,
+                      duration: const Duration(milliseconds: 160),
+                      curve: Curves.easeOut,
+                      child: const Icon(Icons.search),
+                    ),
+                    label: "Discover",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: AnimatedScale(
+                      scale: _selectedIndex == 1 ? 1.12 : 1.0,
+                      duration: const Duration(milliseconds: 160),
+                      curve: Curves.easeOut,
+                      child: const Icon(Icons.collections),
+                    ),
+                    label: "Collection",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: AnimatedScale(
+                      scale: _selectedIndex == 2 ? 1.12 : 1.0,
+                      duration: const Duration(milliseconds: 160),
+                      curve: Curves.easeOut,
+                      child: const Icon(Icons.group),
+                    ),
+                    label: "Friends",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: AnimatedScale(
+                      scale: _selectedIndex == 3 ? 1.12 : 1.0,
+                      duration: const Duration(milliseconds: 160),
+                      curve: Curves.easeOut,
+                      child: const Icon(Icons.person),
+                    ),
+                    label: "Profile",
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -103,7 +158,7 @@ class DiscoverPage extends StatefulWidget {
 
 class _DiscoverPageState extends State<DiscoverPage> {
   late PageController _pageController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -130,7 +185,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<BoardGame>>(
@@ -142,10 +196,15 @@ class _DiscoverPageState extends State<DiscoverPage> {
 
         final games = snapshot.data ?? [];
         if (games.isEmpty) {
-          return const Center(child: Text("No games available", style: TextStyle(color: Colors.white)));
+          return const Center(
+            child: Text(
+              "No games available",
+              style: TextStyle(color: Colors.white),
+            ),
+          );
         }
-        
-        final virtualItemCount = games.length * 1000; 
+
+        final virtualItemCount = games.length * 1000;
 
         return Stack(
           children: [
@@ -158,24 +217,31 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 children: [
                   Text(
                     "Board Games",
-                    style: GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: GoogleFonts.poppins(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                   Text(
                     "Discover new worlds",
-                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey),
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
                   ),
                 ],
               ),
             ),
-            
+
             // The Circular/3D Gallery (Primary Content)
             Center(
               child: SizedBox(
                 height: 500,
                 child: PageView.builder(
                   controller: _pageController,
-                  physics: const BouncingScrollPhysics(), 
-                  itemCount: virtualItemCount, 
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: virtualItemCount,
                   itemBuilder: (context, index) {
                     final gameIndex = index % games.length;
                     final game = games[gameIndex];
@@ -185,12 +251,15 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     return AnimatedBuilder(
                       animation: _pageController,
                       builder: (context, child) {
-                        final double page = (_pageController.hasClients && _pageController.page != null)
+                        final double page =
+                            (_pageController.hasClients &&
+                                _pageController.page != null)
                             ? _pageController.page!
                             : _pageController.initialPage.toDouble();
 
                         final double pageDelta = page - index;
-                        final double distortion = (1 - (pageDelta.abs() * 0.3)).clamp(0.0, 1.0);
+                        final double distortion = (1 - (pageDelta.abs() * 0.3))
+                            .clamp(0.0, 1.0);
                         final double rotation = pageDelta * -0.2;
 
                         return Transform(
@@ -208,26 +277,34 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 ),
               ),
             ),
-            
+
             // LEFT Navigation Button (Overlay)
             Positioned(
               left: 0,
               top: 0,
-              bottom: 120, 
+              bottom: 120,
               child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 30),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 30,
+                ),
                 onPressed: _goToPreviousPage,
                 splashRadius: 20,
               ),
             ),
-            
+
             // RIGHT Navigation Button (Overlay)
             Positioned(
               right: 0,
               top: 0,
-              bottom: 120, 
+              bottom: 120,
               child: IconButton(
-                icon: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 30),
+                icon: const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 30,
+                ),
                 onPressed: _goToNextPage,
                 splashRadius: 20,
               ),
@@ -271,7 +348,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
               color: Colors.black.withOpacity(0.5),
               blurRadius: 20,
               offset: const Offset(0, 10),
-            )
+            ),
           ],
         ),
         child: ClipRRect(
@@ -280,9 +357,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
             fit: StackFit.expand,
             children: [
               Image.network(
-                game.thumbnailUrl.isEmpty ? 'https://via.placeholder.com/400' : game.thumbnailUrl,
+                game.thumbnailUrl.isEmpty
+                    ? 'https://via.placeholder.com/400'
+                    : game.thumbnailUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (c, o, s) => Container(color: Colors.grey[900], child: const Icon(Icons.broken_image, color: Colors.white)),
+                errorBuilder: (c, o, s) => Container(
+                  color: Colors.grey[900],
+                  child: const Icon(Icons.broken_image, color: Colors.white),
+                ),
               ),
               Container(
                 decoration: const BoxDecoration(
@@ -295,7 +377,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 ),
               ),
               Positioned(
-                bottom: 20, left: 20, right: 20,
+                bottom: 20,
+                left: 20,
+                right: 20,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

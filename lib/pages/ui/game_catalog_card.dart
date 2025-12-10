@@ -82,7 +82,6 @@ class GameCatalogCard extends StatelessWidget {
                 child: AnimatedScale(
                   scale: isSelected ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 200),
-                  // FIXED HERE: Changed Curves.backOut to Curves.easeOutBack
                   curve: Curves.easeOutBack,
                   child: Container(
                     decoration: const BoxDecoration(
